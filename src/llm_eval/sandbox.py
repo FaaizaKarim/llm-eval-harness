@@ -22,11 +22,11 @@ from pathlib import Path
 from .models import ExecutionResult
 
 _PREAMBLE = """\
-import resource, sys
 try:
+    import resource
     resource.setrlimit(resource.RLIMIT_AS, ({mem}, {mem}))
 except (ImportError, ValueError, OSError):
-    pass  # not available on this platform; timeout still applies
+    pass  # resource module is POSIX-only (absent on Windows); timeout still applies
 """
 
 
