@@ -14,6 +14,7 @@ hostile inputs, run the harness itself inside the provided Docker image
 from __future__ import annotations
 
 import asyncio
+import os
 import sys
 import tempfile
 import time
@@ -28,6 +29,23 @@ try:
 except (ImportError, ValueError, OSError):
     pass  # resource module is POSIX-only (absent on Windows); timeout still applies
 """
+
+
+
+def _minimal_env() -> dict[str, str]:
+    """Smallest environment the OS will accept — never the parent's.
+
+    POSIX runs fine with an empty environment. Windows does not:
+    CreateProcess rejects an empty environment block (WinError 87) and
+    the Python interpreter needs SystemRoot to initialize. So on Windows
+    we pass through only a handful of system variables — never secrets
+    like LLM_API_KEY.
+    """
+    if os.name == "nt":
+        keep = ("SystemRoot", "SystemDrive", "ComSpec", "PATHEXT",
+                "TEMP", "TMP", "windir", "NUMBER_OF_PROCESSORS")
+        return {k: os.environ[k] for k in keep if k in os.environ}
+    return {}
 
 
 async def run_python(
@@ -53,7 +71,7 @@ async def run_python(
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
             cwd=tmp,
-            env={},  # do not leak API keys or host env to untrusted code
+            env=_minimal_env(),  # never the parent env — no API key leakage
         )
         try:
             stdout_b, stderr_b = await asyncio.wait_for(
