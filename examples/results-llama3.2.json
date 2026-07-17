@@ -1,0 +1,92 @@
+{
+  "summary": {
+    "model": "llama3.2",
+    "tasks": 6,
+    "passed": 5,
+    "pass_rate": 0.8333,
+    "avg_duration_s": 0.297,
+    "failure_modes": {
+      "wrong_answer": 1
+    }
+  },
+  "results": [
+    {
+      "task_id": "algo-001-add",
+      "model": "llama3.2",
+      "passed": true,
+      "failure_mode": "none",
+      "tests_passed": 3,
+      "tests_total": 3,
+      "duration_s": 0.2969999999999118,
+      "error_trace": "",
+      "generated_code": "def add(a: int, b: int) -> int:\n    return a + b",
+      "timestamp": 1784297277.4378164,
+      "pass_rate": 1.0
+    },
+    {
+      "task_id": "algo-002-palindrome",
+      "model": "llama3.2",
+      "passed": true,
+      "failure_mode": "none",
+      "tests_passed": 3,
+      "tests_total": 3,
+      "duration_s": 0.23500000000001364,
+      "error_trace": "",
+      "generated_code": "def is_palindrome(s):\n    s = ''.join(c for c in s if c.isalnum()).lower()\n    return s == s[::-1]",
+      "timestamp": 1784297286.4247591,
+      "pass_rate": 1.0
+    },
+    {
+      "task_id": "ds-001-two-sum",
+      "model": "llama3.2",
+      "passed": true,
+      "failure_mode": "none",
+      "tests_passed": 3,
+      "tests_total": 3,
+      "duration_s": 0.375,
+      "error_trace": "",
+      "generated_code": "def two_sum(nums, target):\n    num_map = {}\n    for i, num in enumerate(nums):\n        complement = target - num\n        if complement in num_map:\n            return [num_map[complement], i]\n        num_map[num] = i\n    raise ValueError(\"No solution found\")",
+      "timestamp": 1784297308.114251,
+      "pass_rate": 1.0
+    },
+    {
+      "task_id": "ds-002-lru",
+      "model": "llama3.2",
+      "passed": true,
+      "failure_mode": "none",
+      "tests_passed": 1,
+      "tests_total": 1,
+      "duration_s": 0.29700000000002547,
+      "error_trace": "",
+      "generated_code": "from collections import OrderedDict\n\ndef lru_trace(capacity, ops):\n    cache = OrderedDict()\n    results = []\n    \n    for op in ops:\n        if op[0] == 'put':\n            cache[op[1]] = op[2]\n            if len(cache) > capacity:\n                cache.popitem(last=False)\n        elif op[0] == 'get':\n            if op[1] in cache:\n                results.append(cache[op[1]])\n                del cache[op[1]]\n                cache[op[1]] = None\n            else:\n                results.append(-1)\n    \n    return results",
+      "timestamp": 1784297336.316299,
+      "pass_rate": 1.0
+    },
+    {
+      "task_id": "str-001-anagrams",
+      "model": "llama3.2",
+      "passed": false,
+      "failure_mode": "wrong_answer",
+      "tests_passed": 0,
+      "tests_total": 1,
+      "duration_s": 0.29700000000002547,
+      "error_trace": "call: group_anagrams(['eat','tea','tan','ate','nat','bat'])\nexpected: [['ate', 'eat', 'tea'], ['bat'], ['nat', 'tan']]\nactual: [['bat'], ['eat', 'tea', 'ate'], ['tan', 'nat']]",
+      "generated_code": "def group_anagrams(words):\n    anagrams = {}\n    for word in words:\n        sorted_word = \"\".join(sorted(word))\n        if sorted_word in anagrams:\n            anagrams[sorted_word].append(word)\n        else:\n            anagrams[sorted_word] = [word]\n    return sorted([group for group in anagrams.values()])",
+      "timestamp": 1784297355.2082624,
+      "pass_rate": 0.0
+    },
+    {
+      "task_id": "debug-001-mutable-default",
+      "model": "llama3.2",
+      "passed": true,
+      "failure_mode": "none",
+      "tests_passed": 3,
+      "tests_total": 3,
+      "duration_s": 0.28099999999994907,
+      "error_trace": "",
+      "generated_code": "def append_item(item, bucket=None):\n    if bucket is None:\n        bucket = []\n    return bucket + [item]",
+      "timestamp": 1784297361.1861467,
+      "pass_rate": 1.0
+    }
+  ]
+}

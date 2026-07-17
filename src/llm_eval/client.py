@@ -70,7 +70,11 @@ class OpenAICompatibleClient(LLMClient):
                 {"role": "user", "content": prompt},
             ],
         }
-        headers = {"Authorization": f"Bearer {self._api_key}"}
+        # Local endpoints (Ollama, vLLM) need no key; an empty
+        # "Bearer " value is an illegal HTTP header, so omit it entirely.
+        headers = (
+            {"Authorization": f"Bearer {self._api_key}"} if self._api_key else {}
+        )
         async with httpx.AsyncClient(timeout=self._timeout_s) as client:
             resp = await client.post(
                 f"{self._base_url}/chat/completions", json=payload, headers=headers

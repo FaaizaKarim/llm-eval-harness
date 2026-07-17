@@ -38,6 +38,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--mock", action="store_true", help="Use the offline mock client")
     parser.add_argument("--concurrency", type=int, default=4)
     parser.add_argument("--timeout", type=float, default=10.0, help="Per-task sandbox timeout (s)")
+    parser.add_argument("--gen-timeout", type=float, default=60.0,
+                        help="HTTP timeout for model generation (s); raise for slow local CPU inference")
     parser.add_argument("--out", default="results.json", help="JSON results path")
     args = parser.parse_args(argv)
 
@@ -46,7 +48,8 @@ def main(argv: list[str] | None = None) -> int:
     client = (
         MockClient(responses=_DEMO_RESPONSES)
         if args.mock
-        else OpenAICompatibleClient(model=args.model, base_url=args.base_url)
+        else OpenAICompatibleClient(model=args.model, base_url=args.base_url,
+                                    timeout_s=args.gen_timeout)
     )
     harness = Harness(client, max_concurrency=args.concurrency, timeout_s=args.timeout)
 
